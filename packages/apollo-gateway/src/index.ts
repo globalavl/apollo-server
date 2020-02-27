@@ -152,6 +152,8 @@ type RequestContext<TContext> = WithRequired<
   'document' | 'queryHash'
 >;
 
+export const GCS_RETRY_COUNT = 3;
+
 export class ApolloGateway implements GraphQLService {
   public schema?: GraphQLSchema;
   protected serviceMap: DataSourceCache = Object.create(null);
@@ -172,6 +174,11 @@ export class ApolloGateway implements GraphQLService {
     // @see: https://git.io/JvRUa
     headers: {
       'user-agent': `apollo-gateway/${require('../package.json').version}`
+    },
+    retry: {
+      retries: GCS_RETRY_COUNT,
+      minTimeout: 10,
+      maxTimeout: 100
     }
   });
 

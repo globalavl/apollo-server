@@ -1,16 +1,19 @@
 import nock from 'nock';
-import { ApolloGateway } from '../..';
+import { ApolloGateway, GCS_RETRY_COUNT } from '../..';
 import {
   mockLocalhostSDLQuery,
   mockStorageSecretSuccess,
+  mockStorageSecret,
   mockCompositionConfigLinkSuccess,
+  mockCompositionConfigLink,
   mockCompositionConfigsSuccess,
+  mockCompositionConfigs,
   mockImplementingServicesSuccess,
+  mockImplementingServices,
   mockRawPartialSchemaSuccess,
+  mockRawPartialSchema,
   apiKeyHash,
   graphId,
-  mockImplementingServices,
-  mockRawPartialSchema,
 } from './nockMocks';
 
 // This is a nice DX hack for GraphQL code highlighting and formatting within the file.
@@ -33,7 +36,7 @@ const service = {
       name: String
       username: String
     }
-  `
+  `,
 };
 
 const updatedService = {
@@ -52,8 +55,8 @@ const updatedService = {
       name: String
       username: String
     }
-  `
-}
+  `,
+};
 
 beforeEach(() => {
   if (!nock.isActive()) nock.activate();
@@ -142,4 +145,59 @@ it('Rollsback to a previous schema when triggered', async () => {
   jest.useFakeTimers();
 
   expect(onChange.mock.calls.length).toBe(2);
+});
+
+function failNTimes(n: number, fn: () => nock.Interceptor) {
+  for (let i = 0; i < n; i++) {
+    fn().reply(500);
+  }
+}
+
+it(`Retries GCS (up to ${GCS_RETRY_COUNT} times) on failure for each request and succeeds`, async () => {
+  failNTimes(GCS_RETRY_COUNT, mockStorageSecret);
+  mockStorageSecretSuccess();
+
+  failNTimes(GCS_RETRY_COUNT, mockCompositionConfigLink);
+  mockCompositionConfigLinkSuccess();
+
+  failNTimes(GCS_RETRY_COUNT, mockCompositionConfigs);
+  mockCompositionConfigsSuccess([service.implementingServicePath]);
+
+  failNTimes(GCS_RETRY_COUNT, () => mockImplementingServices(service));
+  mockImplementingServicesSuccess(service);
+
+  failNTimes(GCS_RETRY_COUNT, () => mockRawPartialSchema(service));
+  mockRawPartialSchemaSuccess(service);
+
+  const gateway = new ApolloGateway({});
+
+  await gateway.load({ engine: { apiKeyHash, graphId } });
+  expect(gateway.schema!.getType('User')!.description).toBe('This is my User');
+});
+
+it(`Fails after the ${GCS_RETRY_COUNT + 1}th attempt to reach GCS`, async () => {
+  failNTimes(GCS_RETRY_COUNT + 1, mockStorageSecret);
+
+  const gateway = new ApolloGateway({});
+  await expect(
+    gateway.load({ engine: { apiKeyHash, graphId } }),
+  ).rejects.toThrowErrorMatchingInlineSnapshot(
+    `"Could not communicate with Apollo Graph Manager storage: "`,
+  );
+});
+
+it(`Errors when the secret isn't hosted on GCS`, async () => {
+  mockStorageSecret().reply(
+    403,
+    `<Error><Code>AccessDenied</Code>
+    Anonymous caller does not have storage.objects.get`,
+    { 'content-type': 'application/xml' },
+  );
+
+  const gateway = new ApolloGateway({});
+  await expect(
+    gateway.load({ engine: { apiKeyHash, graphId } }),
+  ).rejects.toThrowErrorMatchingInlineSnapshot(
+    `"Unable to authenticate with Apollo Graph Manager storage while fetching https://storage.googleapis.com/engine-partial-schema-prod/federated-service/storage-secret/dd55a79d467976346d229a7b12b673ce.json"`,
+  );
 });
