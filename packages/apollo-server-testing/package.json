@@ -1,5 +1,5 @@
 {
-  "name": "apollo-server-testing",
+  "name": "@nuragic/apollo-server-testing",
   "version": "2.11.0",
   "description": "Test utils for apollo-server",
   "main": "dist/index.js",

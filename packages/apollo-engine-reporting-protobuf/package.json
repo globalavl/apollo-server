@@ -1,5 +1,5 @@
 {
-  "name": "apollo-engine-reporting-protobuf",
+  "name": "@nuragic/apollo-engine-reporting-protobuf",
   "version": "0.4.4",
   "description": "Protobuf format for Apollo Engine",
   "main": "dist/index.js",

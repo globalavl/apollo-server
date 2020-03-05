@@ -1,5 +1,5 @@
 {
-  "name": "apollo-server-monorepo",
+  "name": "@nuragic/apollo-server-monorepo",
   "private": true,
   "license": "MIT",
   "repository": "github:apollographql/apollo-server",
@@ -9,7 +9,7 @@
     "compile:clean": "tsc --build tsconfig.build.json --clean",
     "watch": "tsc --build tsconfig.build.json --watch",
     "release:version-bump": "lerna version -m 'Release'",
-    "release:version-bump:server": "npm run release:version-bump -- --force-publish=apollo-server,apollo-server-core,apollo-server-azure-functions,apollo-server-cloud-functions,apollo-server-cloudflare,apollo-server-express,apollo-server-fastify,apollo-server-hapi,apollo-server-koa,apollo-server-lambda,apollo-server-micro",
+    "release:version-bump:server": "npm run release:version-bump -- --force-publish=@nuragic/apollo-server,@nuragic/apollo-server-core,@nuragic/apollo-server-azure-functions,@nuragic/apollo-server-cloud-functions,@nuragic/apollo-server-cloudflare,@nuragic/apollo-server-express,@nuragic/apollo-server-fastify,@nuragic/apollo-server-hapi,@nuragic/apollo-server-koa,@nuragic/apollo-server-lambda,@nuragic/apollo-server-micro",
     "release:version-bump:federation": "npm run release:version-bump -- --force-publish=@apollo/federation,@apollo/gateway",
     "release:start-ci-publish": "node -p '`Publish (dist-tag:${process.env.APOLLO_DIST_TAG || \"latest\"})`' | git tag -F - \"publish/$(date -u '+%Y%m%d%H%M%S')\" && git push origin \"$(git describe --match='publish/*' --tags --exact-match HEAD)\"",
     "postinstall": "lerna run prepare && npm run compile",

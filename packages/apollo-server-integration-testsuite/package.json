@@ -1,5 +1,5 @@
 {
-  "name": "apollo-server-integration-testsuite",
+  "name": "@nuragic/apollo-server-integration-testsuite",
   "private": true,
   "version": "2.11.0",
   "description": "Apollo Server Integrations testsuite",

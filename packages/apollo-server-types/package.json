@@ -1,5 +1,5 @@
 {
-  "name": "apollo-server-types",
+  "name": "@nuragic/apollo-server-types",
   "version": "0.3.0",
   "description": "Apollo Server shared types",
   "main": "dist/index.js",

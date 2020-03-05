@@ -1,5 +1,5 @@
 {
-  "name": "apollo-datasource-rest",
+  "name": "@nuragic/apollo-datasource-rest",
   "version": "0.8.0",
   "author": "opensource@apollographql.com",
   "license": "MIT",

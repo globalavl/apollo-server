@@ -1,5 +1,5 @@
 {
-  "name": "apollo-server-cache-redis",
+  "name": "@nuragic/apollo-server-cache-redis",
   "version": "1.1.5",
   "author": "opensource@apollographql.com",
   "license": "MIT",

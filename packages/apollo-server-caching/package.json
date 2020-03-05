@@ -1,5 +1,5 @@
 {
-  "name": "apollo-server-caching",
+  "name": "@nuragic/apollo-server-caching",
   "version": "0.5.1",
   "author": "opensource@apollographql.com",
   "license": "MIT",

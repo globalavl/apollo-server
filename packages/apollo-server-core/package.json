@@ -1,5 +1,5 @@
 {
-  "name": "apollo-server-core",
+  "name": "@nuragic/apollo-server-core",
   "version": "2.11.0",
   "description": "Core engine for Apollo GraphQL server",
   "main": "dist/index.js",
