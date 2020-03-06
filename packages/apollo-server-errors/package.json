@@ -1,6 +1,6 @@
 {
   "name": "@nuragic/apollo-server-errors",
-  "version": "2.4.0",
+  "version": "2.4.1-next.0",
   "author": "opensource@apollographql.com",
   "license": "MIT",
   "repository": {

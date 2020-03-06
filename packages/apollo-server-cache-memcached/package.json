@@ -1,6 +1,6 @@
 {
   "name": "@nuragic/apollo-server-cache-memcached",
-  "version": "0.6.4",
+  "version": "0.6.5-next.0",
   "author": "opensource@apollographql.com",
   "license": "MIT",
   "repository": {
